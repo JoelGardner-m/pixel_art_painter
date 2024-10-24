@@ -1,5 +1,33 @@
 import { useState, useEffect } from "react"
 
+function Canvas(props){
+  // current array and update array(picture)
+  const [canvasLoad, setCanvasLoad] = useState(false)
+  const id = props.ID
+  function changeCanvasStatus(){
+    setCanvasLoad(true)
+  }
+  useEffect(()=>{
+    const canvas = document.getElementById(id)
+    const ctx = canvas.getContext("2d")
+    ctx.beginPath(); // Start a new path
+    ctx.fillStyle = 'red'
+    ctx.strokeStyle = 'blue'
+    ctx.rect(10, 20, 150, 100); // Add a rectangle to the current path
+    ctx.fill(); // Render the path
+    ctx.stroke()
+    // ctx.closePath()
+    
+
+
+  }, [canvasLoad])
+  return(<>
+  <canvas id={id} onload={()=>changeCanvasStatus()} width={300} height={300} style={{backgroundColor:'rgb(100, 100, 20)'}}></canvas>
+  
+  </>)
+
+}
+
 
 
 function Panels (props){
@@ -54,6 +82,7 @@ function App() {
   return (
     <>
     <div>
+    
       <div id="top"> 
         <div id="menu">
           
@@ -85,10 +114,8 @@ function App() {
         </div>
 
         <div id="canvas-space">
-          <canvas id="canvas" width={300} height={300} style={{backgroundColor:'rgb(10, 0, 20)'}}></canvas>
-          <script src="CanvasCode.js">
-          console.log("opt")
-          </script>
+          <Canvas ID="1"/>
+          
         </div>
         <div id="color-palete" style={{width: 100, height: 300, background:'green', borderRadius:'5px'}}> 
         <div id="colors">
