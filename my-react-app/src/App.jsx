@@ -2,27 +2,84 @@ import { useState, useEffect } from "react"
 
 function Canvas(props){
   // current array and update array(picture)
+  const ratio = 250
+  const [canvasWidth, setCanvasWidth] = useState(ratio)
+  const [canvasHeight, setCanvasHeight] = useState(ratio)
+
+  const [canvasGridWidth, setCanvasGridWidth] = useState(ratio/10)
+  const [canvasGridHeight, setCanvasGridHeight] = useState(ratio/10)
+  
+
   const [canvasLoad, setCanvasLoad] = useState(false)
+  const [currentImage, setCurrentImage] = useState(generateGridArray())
+  const [currentPixelScale, setCurrentPixelScale] = useState(10)
+  const [colorSelective, setColorSelective] = useState({
+      c0: 'rgba(255, 255, 255, 1)'
+
+  })
+  function pexel (x, y, w, h, color=0, stroke = 'black'){
+    const canvas = document.getElementById(id)
+    const ctx = canvas.getContext("2d")
+    ctx.beginPath(); // Start a new path
+    ctx.fillStyle = colorSelective['c'+`${color}`]
+    ctx.strokeStyle = stroke
+    ctx.rect(x, y, w, h); // Add a rectangle to the current path
+    ctx.fill(); // Render the path
+    ctx.stroke()
+    ctx.closePath()
+
+  }
+
+  function generateGridArray (){
+    var image = []
+    for(var x = 0; x < canvasGridWidth; x++){
+      var currentLine = []
+      for(var y = 0; y < canvasGridHeight; y++ ){
+        currentLine.push(0)
+        
+      }
+      
+      image.push(currentLine)
+      
+    }
+    return image
+   
+  }
+  function generateimage(){
+    const image = generateGridArray()
+    
+    for (let y = 0; y < image.length; y++) {
+      for (let x = 0; x < image[y].length; x++) {
+        console.log(image[y])
+        pexel(x*currentPixelScale, y*currentPixelScale, currentPixelScale, currentPixelScale, 0)
+        
+      }
+      
+    }
+
+  }
+
+
   const id = props.ID
   function changeCanvasStatus(){
     setCanvasLoad(true)
   }
+
   useEffect(()=>{
-    const canvas = document.getElementById(id)
-    const ctx = canvas.getContext("2d")
-    ctx.beginPath(); // Start a new path
-    ctx.fillStyle = 'red'
-    ctx.strokeStyle = 'blue'
-    ctx.rect(10, 20, 150, 100); // Add a rectangle to the current path
-    ctx.fill(); // Render the path
-    ctx.stroke()
-    // ctx.closePath()
     
 
-
   }, [canvasLoad])
+
+  useEffect(()=>{
+   
+    generateimage()
+
+  }, [])
+  
+
+  
   return(<>
-  <canvas id={id} onload={()=>changeCanvasStatus()} width={300} height={300} style={{backgroundColor:'rgb(100, 100, 20)'}}></canvas>
+  <canvas id={id} onLoad={()=>changeCanvasStatus()} width={canvasWidth} height={canvasHeight} style={{backgroundColor:'rgb(100, 100, 50)'}}></canvas>
   
   </>)
 
